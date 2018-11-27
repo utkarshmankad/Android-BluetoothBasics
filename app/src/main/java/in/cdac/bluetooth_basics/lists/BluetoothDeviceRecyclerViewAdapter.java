@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import in.cdac.bluetooth_basics.R;
 import in.cdac.bluetooth_basics.lists.BluetoothDeviceFragment.OnListFragmentInteractionListener;
 import in.cdac.bluetooth_basics.lists.dummy.DummyContent.DummyItem;
 
