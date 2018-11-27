@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,9 +20,7 @@ import android.widget.Switch;
 import java.util.ArrayList;
 import java.util.Set;
 
-import in.cdac.bluetooth_basics.lists.dummy.DummyContent;
-
-public class MainActivity extends AppCompatActivity implements BluetoothDeviceFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements BluetoothDeviceRecyclerViewAdapter.OnListFragmentInteractionListener, PairedBluetoothDeviceAdapter.OnPairedListFragmentInteractionListener {
 
     Switch enable_disable_bluetooth;
     Button pairing_start_stop;
@@ -37,7 +37,9 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceFr
     BluetoothAdapter bluetoothAdapter = null;
     ArrayList<BluetoothDevice> arrayListBluetoothDevices = null;
 
-    BluetoothDeviceRecyclerViewAdapter bluetoothDeviceRecyclerViewAdapter = new BluetoothDeviceRecyclerViewAdapter(arrayListBluetoothDevices, this);
+    public BluetoothDeviceRecyclerViewAdapter bluetoothDeviceRecyclerViewAdapter;
+
+    public PairedBluetoothDeviceAdapter pairedBluetoothDeviceAdapter;
 
     BluetoothReceiver bluetoothReceiver;
 
@@ -47,26 +49,15 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceFr
         setContentView(R.layout.activity_main);
 
         arrayListpaired = new ArrayList<String>();
-
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         handleSeacrh = new HandleDeviceSearch();
-
-        bluetoothReceiver = new BluetoothReceiver(arrayListBluetoothDevices);
-
         arrayListPairedBluetoothDevices = new ArrayList<BluetoothDevice>();
-        /*
-         * the above declaration is just for getting the paired bluetooth devices;
-         * this helps in the removing the bond between paired devices.
-         */
-        //listItemClickedonPaired = new ListItemClickedonPaired();
         arrayListBluetoothDevices = new ArrayList<BluetoothDevice>();
 
-        //detectedAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_single_choice);
-        //listViewDetected.setAdapter(detectedAdapter);
+        bluetoothReceiver = new BluetoothReceiver(arrayListBluetoothDevices,bluetoothDeviceRecyclerViewAdapter);
 
-        //listItemClicked = new ListItemClicked();
-        //detectedAdapter.notifyDataSetChanged();
-        //listViewPaired.setAdapter(adapter);
+        pairedBluetoothDeviceAdapter = new PairedBluetoothDeviceAdapter(arrayListPairedBluetoothDevices,this);
+        bluetoothDeviceRecyclerViewAdapter = new BluetoothDeviceRecyclerViewAdapter(arrayListBluetoothDevices, this);
 
         // Get the default adapter
         final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -74,6 +65,15 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceFr
             // Device doesn't support Bluetooth
             Log.e("Bluetooth not supported", "Bluetooth not supoorted on this device");
         }
+
+        //Paired devices list view
+        RecyclerView recyclerView_paired_devices = (RecyclerView)findViewById(R.id.rv_paired_devices);
+        recyclerView_paired_devices.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView_paired_devices.setAdapter(pairedBluetoothDeviceAdapter);
+
+        RecyclerView recyclerView_new_devices = (RecyclerView)findViewById(R.id.rv_new_devices);
+        recyclerView_new_devices.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView_new_devices.setAdapter(bluetoothDeviceRecyclerViewAdapter);
 
         //Switch to enable or disable bluetooth
         enable_disable_bluetooth = (Switch) findViewById(R.id.bluetooth_switch);
@@ -108,11 +108,12 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceFr
     protected void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
+        //getpaired devices
         getPairedDevices();
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(BluetoothDevice item) {
         Log.e("Bluetooth device", "item clicked");
     }
 
@@ -146,13 +147,20 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceFr
 
     private void getPairedDevices() {
         Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
+
         if (pairedDevice.size() > 0) {
+
             for (BluetoothDevice device : pairedDevice) {
 
                 arrayListpaired.add(device.getName() + "\n" + device.getAddress());
                 arrayListPairedBluetoothDevices.add(device);
             }
         }
-        bluetoothDeviceRecyclerViewAdapter.notifyDataSetChanged();
+        pairedBluetoothDeviceAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPairListInteraction(BluetoothDevice item) {
+        Log.e("Bluetooth device", "paired item clicked");
     }
 }

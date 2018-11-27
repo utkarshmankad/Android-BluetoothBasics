@@ -13,10 +13,16 @@ public class BluetoothDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Blu
 
     private final List<BluetoothDevice> mValues;
     private final OnListFragmentInteractionListener mListener;
+    BluetoothDeviceRecyclerViewAdapter bluetoothDeviceRecyclerViewAdapter;
 
     public BluetoothDeviceRecyclerViewAdapter(List<BluetoothDevice> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+        bluetoothDeviceRecyclerViewAdapter = this;
+    }
+
+    public BluetoothDeviceRecyclerViewAdapter getInstance(){
+        return  bluetoothDeviceRecyclerViewAdapter;
     }
 
     @Override
@@ -29,10 +35,10 @@ public class BluetoothDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Blu
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        /*holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
-*/
+
+        holder.bluetoothDevice = mValues.get(position);
+        holder.mIdView.setText(mValues.get(position).getName());
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,9 +57,12 @@ public class BluetoothDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Blu
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         public final View mView;
+
         public final TextView mIdView;
         public final TextView mContentView;
+
         public BluetoothDevice bluetoothDevice;
 
         public ViewHolder(View view) {
@@ -67,5 +76,10 @@ public class BluetoothDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Blu
         public String toString() {
             return super.toString() + " '" + mContentView.getText() + "'";
         }
+    }
+
+    public interface OnListFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onListFragmentInteraction(BluetoothDevice item);
     }
 }

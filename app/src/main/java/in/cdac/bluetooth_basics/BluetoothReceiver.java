@@ -13,9 +13,11 @@ import java.util.List;
 public class BluetoothReceiver extends BroadcastReceiver {
 
     List<BluetoothDevice> arrayListBluetoothDevices;
+    BluetoothDeviceRecyclerViewAdapter bluetoothDeviceRecyclerViewAdapter;
 
-    BluetoothReceiver(List<BluetoothDevice> arrayListBluetoothDevices) {
+    BluetoothReceiver(List<BluetoothDevice> arrayListBluetoothDevices, BluetoothDeviceRecyclerViewAdapter bluetoothDeviceRecyclerViewAdapter) {
         this.arrayListBluetoothDevices = arrayListBluetoothDevices;
+        this.bluetoothDeviceRecyclerViewAdapter = bluetoothDeviceRecyclerViewAdapter;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
             {                                           // device to the arraylist.
                 //detectedAdapter.add(device.getName() + "\n" + device.getAddress());
                 arrayListBluetoothDevices.add(device);
-                //detectedAdapter.notifyDataSetChanged();
+                bluetoothDeviceRecyclerViewAdapter.notifyDataSetChanged();
             } else {
                 boolean flag = true;    // flag to indicate that particular device is already in the arlist or not
                 for (int i = 0; i < arrayListBluetoothDevices.size(); i++) {
@@ -50,7 +52,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 if (flag == true) {
                     //detectedAdapter.add(device.getName() + "\n" + device.getAddress());
                     arrayListBluetoothDevices.add(device);
-                    //detectedAdapter.notifyDataSetChanged();
+                    bluetoothDeviceRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         }
