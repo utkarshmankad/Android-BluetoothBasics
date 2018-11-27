@@ -7,12 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BluetoothDeviceRecyclerViewAdapter extends RecyclerView.Adapter<BluetoothDeviceRecyclerViewAdapter.ViewHolder> {
 
-    private final List<BluetoothDevice> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private List<BluetoothDevice> mValues = new ArrayList<BluetoothDevice>();
+    private OnListFragmentInteractionListener mListener;
     BluetoothDeviceRecyclerViewAdapter bluetoothDeviceRecyclerViewAdapter;
 
     public BluetoothDeviceRecyclerViewAdapter(List<BluetoothDevice> items, OnListFragmentInteractionListener listener) {
@@ -37,7 +38,8 @@ public class BluetoothDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Blu
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         holder.bluetoothDevice = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getName());
+        holder.mIdView.setText((position+1)+"");
+        holder.mContentView.setText(holder.bluetoothDevice.getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

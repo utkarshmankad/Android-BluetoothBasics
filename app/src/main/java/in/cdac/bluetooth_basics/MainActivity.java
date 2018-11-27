@@ -54,10 +54,10 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         arrayListPairedBluetoothDevices = new ArrayList<BluetoothDevice>();
         arrayListBluetoothDevices = new ArrayList<BluetoothDevice>();
 
-        bluetoothReceiver = new BluetoothReceiver(arrayListBluetoothDevices,bluetoothDeviceRecyclerViewAdapter);
-
         pairedBluetoothDeviceAdapter = new PairedBluetoothDeviceAdapter(arrayListPairedBluetoothDevices,this);
         bluetoothDeviceRecyclerViewAdapter = new BluetoothDeviceRecyclerViewAdapter(arrayListBluetoothDevices, this);
+
+        bluetoothReceiver = new BluetoothReceiver(arrayListBluetoothDevices,bluetoothDeviceRecyclerViewAdapter);
 
         // Get the default adapter
         final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

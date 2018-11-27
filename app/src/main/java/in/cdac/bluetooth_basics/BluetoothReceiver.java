@@ -26,8 +26,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
         Message msg = Message.obtain();
         String action = intent.getAction();
         if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-            Toast.makeText(context, "ACTION_FOUND", Toast.LENGTH_SHORT).show();
-
+            Log.e("Device Found","ACTION_FOUND");
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             try {
                 //device.getClass().getMethod("setPairingConfirmation", boolean.class).invoke(device, true);
