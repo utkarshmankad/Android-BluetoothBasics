@@ -35,7 +35,7 @@ public class BluetoothDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Blu
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.bluetoothDevice = mValues.get(position);
         holder.mIdView.setText((position+1)+"");
@@ -47,7 +47,7 @@ public class BluetoothDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Blu
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.bluetoothDevice);
+                    mListener.onListFragmentInteraction(holder.bluetoothDevice,position);
                 }
             }
         });
@@ -82,6 +82,6 @@ public class BluetoothDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Blu
 
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(BluetoothDevice item);
+        void onListFragmentInteraction(BluetoothDevice item, int position);
     }
 }

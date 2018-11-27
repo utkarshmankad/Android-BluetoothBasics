@@ -31,7 +31,7 @@ public class PairedBluetoothDeviceAdapter extends RecyclerView.Adapter<PairedBlu
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final PairedBluetoothDeviceAdapter.ViewHolder holder, int i) {
+    public void onBindViewHolder(@NonNull final PairedBluetoothDeviceAdapter.ViewHolder holder, final int i) {
 
         holder.bluetoothDevice = mValues.get(i);
         holder.mIdView.setText((i+1)+"");
@@ -43,7 +43,7 @@ public class PairedBluetoothDeviceAdapter extends RecyclerView.Adapter<PairedBlu
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onPairListInteraction(holder.bluetoothDevice);
+                    mListener.onPairListInteraction(holder.bluetoothDevice,i);
                 }
             }
         });
@@ -76,6 +76,6 @@ public class PairedBluetoothDeviceAdapter extends RecyclerView.Adapter<PairedBlu
 
     public interface OnPairedListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onPairListInteraction(BluetoothDevice item);
+        void onPairListInteraction(BluetoothDevice item, int position);
     }
 }

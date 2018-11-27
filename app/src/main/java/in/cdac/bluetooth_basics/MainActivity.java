@@ -17,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -25,11 +26,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
     Switch enable_disable_bluetooth;
     Button pairing_start_stop;
 
-    ListView listViewPaired;
-    ListView listViewDetected;
     ArrayList<String> arrayListpaired;
-    Button buttonSearch, buttonOn, buttonDesc, buttonOff;
-    ArrayAdapter<String> adapter, detectedAdapter;
     HandleDeviceSearch handleSeacrh;
     BluetoothDevice bdDevice;
     BluetoothClass bdClass;
@@ -54,10 +51,10 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         arrayListPairedBluetoothDevices = new ArrayList<BluetoothDevice>();
         arrayListBluetoothDevices = new ArrayList<BluetoothDevice>();
 
-        pairedBluetoothDeviceAdapter = new PairedBluetoothDeviceAdapter(arrayListPairedBluetoothDevices,this);
+        pairedBluetoothDeviceAdapter = new PairedBluetoothDeviceAdapter(arrayListPairedBluetoothDevices, this);
         bluetoothDeviceRecyclerViewAdapter = new BluetoothDeviceRecyclerViewAdapter(arrayListBluetoothDevices, this);
 
-        bluetoothReceiver = new BluetoothReceiver(arrayListBluetoothDevices,bluetoothDeviceRecyclerViewAdapter);
+        bluetoothReceiver = new BluetoothReceiver(arrayListBluetoothDevices, bluetoothDeviceRecyclerViewAdapter);
 
         // Get the default adapter
         final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -67,11 +64,11 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         }
 
         //Paired devices list view
-        RecyclerView recyclerView_paired_devices = (RecyclerView)findViewById(R.id.rv_paired_devices);
+        RecyclerView recyclerView_paired_devices = (RecyclerView) findViewById(R.id.rv_paired_devices);
         recyclerView_paired_devices.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_paired_devices.setAdapter(pairedBluetoothDeviceAdapter);
 
-        RecyclerView recyclerView_new_devices = (RecyclerView)findViewById(R.id.rv_new_devices);
+        RecyclerView recyclerView_new_devices = (RecyclerView) findViewById(R.id.rv_new_devices);
         recyclerView_new_devices.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_new_devices.setAdapter(bluetoothDeviceRecyclerViewAdapter);
 
@@ -113,8 +110,30 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
     }
 
     @Override
-    public void onListFragmentInteraction(BluetoothDevice item) {
+    public void onListFragmentInteraction(BluetoothDevice item, int position) {
         Log.e("Bluetooth device", "item clicked");
+        bdDevice = arrayListBluetoothDevices.get(position);
+        //bdClass = arrayListBluetoothDevices.get(position);
+        Log.i("Log", "The dvice : " + bdDevice.toString());
+        /*
+         * here below we can do pairing without calling the callthread(), we can directly call the
+         * connect(). but for the safer side we must usethe threading object.
+         */
+        //callThread();
+        //connect(bdDevice);
+        Boolean isBonded = false;
+        try {
+            isBonded = createBond(bdDevice);
+            if (isBonded) {
+                //arrayListpaired.add(bdDevice.getName()+"\n"+bdDevice.getAddress());
+                //adapter.notifyDataSetChanged();
+                getPairedDevices();
+                pairedBluetoothDeviceAdapter.notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }//connect(bdDevice);
+        Log.i("Log", "The bond is created: " + isBonded);
     }
 
 
@@ -160,7 +179,36 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
     }
 
     @Override
-    public void onPairListInteraction(BluetoothDevice item) {
+    public void onPairListInteraction(BluetoothDevice item, int position) {
         Log.e("Bluetooth device", "paired item clicked");
+        bdDevice = arrayListPairedBluetoothDevices.get(position);
+        try {
+            Boolean removeBonding = removeBond(bdDevice);
+            if (removeBonding) {
+                arrayListpaired.remove(position);
+                pairedBluetoothDeviceAdapter.notifyDataSetChanged();
+            }
+            Log.i("Log", "Removed" + removeBonding);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public boolean removeBond(BluetoothDevice btDevice)
+            throws Exception {
+        Class btClass = Class.forName("android.bluetooth.BluetoothDevice");
+        Method removeBondMethod = btClass.getMethod("removeBond");
+        Boolean returnValue = (Boolean) removeBondMethod.invoke(btDevice);
+        return returnValue.booleanValue();
+    }
+
+
+    public boolean createBond(BluetoothDevice btDevice)
+            throws Exception {
+        Class class1 = Class.forName("android.bluetooth.BluetoothDevice");
+        Method createBondMethod = class1.getMethod("createBond");
+        Boolean returnValue = (Boolean) createBondMethod.invoke(btDevice);
+        return returnValue.booleanValue();
     }
 }
