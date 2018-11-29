@@ -8,9 +8,9 @@ Simple Android project for basic bluetooth related works---
 
   - Search for new devices (implemented)
 
-  - Pair new devices (pending)
+  - Pair new devices (implemented)
 
-  - File Browser (pending)
+  - File Browser (implemented)
 
   - Transfer data to paired devices (pending)
 
