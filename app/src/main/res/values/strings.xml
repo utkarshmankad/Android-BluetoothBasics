@@ -4,5 +4,5 @@
 
     <!--Controls -->
     <string name="enable_disable">Enable-Disable Bluetooth</string>
-    <string name="pair_device">Start Searching</string>
+    <string name="pair_device">Device Search</string>
 </resources>
