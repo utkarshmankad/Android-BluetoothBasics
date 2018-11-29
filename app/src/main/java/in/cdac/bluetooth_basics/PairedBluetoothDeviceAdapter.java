@@ -15,10 +15,12 @@ public class PairedBluetoothDeviceAdapter extends RecyclerView.Adapter<PairedBlu
 
     private List<BluetoothDevice> mValues = new ArrayList<BluetoothDevice>();
     private OnPairedListFragmentInteractionListener mListener;
+    private OnPairedListItemLongPressListener longPressListener;
 
-    public PairedBluetoothDeviceAdapter(ArrayList<BluetoothDevice> mValues, OnPairedListFragmentInteractionListener mListener) {
+    public PairedBluetoothDeviceAdapter(ArrayList<BluetoothDevice> mValues, OnPairedListFragmentInteractionListener mListener, OnPairedListItemLongPressListener longPressListener) {
         this.mValues = mValues;
         this.mListener = mListener;
+        this.longPressListener = longPressListener;
     }
 
     @NonNull
@@ -77,5 +79,9 @@ public class PairedBluetoothDeviceAdapter extends RecyclerView.Adapter<PairedBlu
     public interface OnPairedListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onPairListInteraction(BluetoothDevice item, int position);
+    }
+
+    public interface OnPairedListItemLongPressListener{
+        void onPairedLsitItemLongPressListener(BluetoothDevice item, int position);
     }
 }

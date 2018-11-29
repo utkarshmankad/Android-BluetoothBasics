@@ -26,7 +26,7 @@ import java.util.Set;
 
 import in.cdac.bluetooth_basics.file_browser.FileBrowserActivity;
 
-public class MainActivity extends AppCompatActivity implements BluetoothDeviceRecyclerViewAdapter.OnListFragmentInteractionListener, PairedBluetoothDeviceAdapter.OnPairedListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements BluetoothDeviceRecyclerViewAdapter.OnListFragmentInteractionListener, PairedBluetoothDeviceAdapter.OnPairedListFragmentInteractionListener, PairedBluetoothDeviceAdapter.OnPairedListItemLongPressListener {
 
     Switch enable_disable_bluetooth;
     Button pairing_start_stop, file_browser_test;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         arrayListPairedBluetoothDevices = new ArrayList<BluetoothDevice>();
         arrayListBluetoothDevices = new ArrayList<BluetoothDevice>();
 
-        pairedBluetoothDeviceAdapter = new PairedBluetoothDeviceAdapter(arrayListPairedBluetoothDevices, this);
+        pairedBluetoothDeviceAdapter = new PairedBluetoothDeviceAdapter(arrayListPairedBluetoothDevices, this, this);
         bluetoothDeviceRecyclerViewAdapter = new BluetoothDeviceRecyclerViewAdapter(arrayListBluetoothDevices, this);
 
         bluetoothReceiver = new BluetoothReceiver(arrayListBluetoothDevices, bluetoothDeviceRecyclerViewAdapter);
@@ -191,20 +191,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         /*Request to send data to the clicked paired device*/
         startActivity(new Intent(getApplicationContext(), FileBrowserActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
-        /*
-        *Code to remove Bluetooth paired device
-        bdDevice = arrayListPairedBluetoothDevices.get(position);
-        try {
-            Boolean removeBonding = removeBond(bdDevice);
-            if (removeBonding) {
-                arrayListpaired.remove(position);
-                pairedBluetoothDeviceAdapter.notifyItemRemoved(position);
-            }
-            Log.i("Log", "Removed" + removeBonding);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }*/
+
     }
 
     public boolean removeBond(BluetoothDevice btDevice)
@@ -222,5 +209,23 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         Method createBondMethod = class1.getMethod("createBond");
         Boolean returnValue = (Boolean) createBondMethod.invoke(btDevice);
         return returnValue.booleanValue();
+    }
+
+    @Override
+    public void onPairedLsitItemLongPressListener(BluetoothDevice item, int position) {
+        /*
+        *Code to remove Bluetooth paired device*/
+        bdDevice = arrayListPairedBluetoothDevices.get(position);
+        try {
+            Boolean removeBonding = removeBond(bdDevice);
+            if (removeBonding) {
+                arrayListpaired.remove(position);
+                pairedBluetoothDeviceAdapter.notifyItemRemoved(position);
+            }
+            Log.i("Log", "Removed" + removeBonding);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
