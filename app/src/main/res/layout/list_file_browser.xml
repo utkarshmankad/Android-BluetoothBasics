@@ -14,27 +14,28 @@
         android:layout_alignParentTop="true"
         android:focusable="false" />-->
 
-    <ImageView
-        android:id="@+id/lr_ivFileIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/lr_tvFileName"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="-1dp"
-        android:layout_marginTop="0dp"
-        android:clickable="false"
-        android:focusable="false"
-        android:src="@mipmap/ic_launcher" />
+  <ImageView
+      android:id="@+id/lr_ivFileIcon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignTop="@+id/lr_tvFileName"
+      android:layout_alignParentTop="true"
+      android:layout_marginLeft="5dp"
+      android:layout_marginTop="5dp"
+      android:clickable="false"
+      android:focusable="false"
+      android:src="@drawable/ic_folder_black_24dp" />
 
-    <TextView
-        android:id="@+id/lr_tvFileName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/lr_ivFileIcon"
-        android:clickable="false"
-        android:focusable="false"
-        android:text="TextView" />
+  <TextView
+      android:id="@+id/lr_tvFileName"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="9dp"
+      android:layout_toRightOf="@+id/lr_ivFileIcon"
+      android:clickable="false"
+      android:focusable="false"
+      android:text="TextView" />
 
    <!-- <TextView
         android:id="@+id/lr_tvdate"

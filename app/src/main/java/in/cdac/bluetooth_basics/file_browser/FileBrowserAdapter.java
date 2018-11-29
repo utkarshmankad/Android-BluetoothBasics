@@ -118,14 +118,14 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         int m_lastIndex = m_file.getAbsolutePath().lastIndexOf(".");
         String m_filepath = m_file.getAbsolutePath();
         if (m_file.isDirectory())
-            return R.mipmap.ic_launcher;
+            return R.drawable.ic_folder_black_24dp;
         else {
             if (m_filepath.substring(m_lastIndex).equalsIgnoreCase(".png")) {
-                return R.mipmap.ic_launcher;
+                return R.drawable.ic_image_black_24dp;
             } else if (m_filepath.substring(m_lastIndex).equalsIgnoreCase(".jpg")) {
-                return R.mipmap.ic_launcher;
+                return R.drawable.ic_image_black_24dp;
             } else {
-                return R.mipmap.ic_launcher;
+                return R.drawable.ic_insert_drive_file_black_24dp;
             }
         }
     }

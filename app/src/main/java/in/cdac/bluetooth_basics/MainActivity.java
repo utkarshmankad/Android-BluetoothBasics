@@ -78,18 +78,24 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
 
         //Switch to enable or disable bluetooth
         enable_disable_bluetooth = (Switch) findViewById(R.id.bluetooth_switch);
+        if (bluetoothAdapter.isEnabled()) {
+            enable_disable_bluetooth.setChecked(true);
+            makeDiscoverable();
+        } else {
+            enable_disable_bluetooth.setChecked(false);
+        }
         enable_disable_bluetooth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                if (isChecked) {
+                if (!isChecked) {
+                    //turn off bluetooth
+                    offBluetooth();
+                } else {
                     //turn on bluetooth
                     onBluetooth();
                     //make bluetooth discoverable
                     makeDiscoverable();
-                } else {
-                    //turn off bluetooth
-                    offBluetooth();
                 }
             }
         });
@@ -108,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
 
     @Override
     protected void onStart() {
-        // TODO Auto-generated method stub
         super.onStart();
         //getpaired devices
         getPairedDevices();
@@ -135,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }//connect(bdDevice);
+        }
         Log.i("Log", "The bond is created: " + isBonded);
     }
 
@@ -177,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
             for (BluetoothDevice device : pairedDevice) {
 
                 /*arrayListpaired.add(device.getName() + "\n" + device.getAddress());
-                */
+                 */
                 arrayListPairedBluetoothDevices.add(device);
             }
         }
@@ -214,18 +219,31 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
     @Override
     public void onPairedLsitItemLongPressListener(BluetoothDevice item, int position) {
         /*
-        *Code to remove Bluetooth paired device*/
+         *Code to remove Bluetooth paired device*/
         bdDevice = arrayListPairedBluetoothDevices.get(position);
         try {
             Boolean removeBonding = removeBond(bdDevice);
             if (removeBonding) {
-                arrayListpaired.remove(position);
+                arrayListPairedBluetoothDevices.remove(position);
                 pairedBluetoothDeviceAdapter.notifyItemRemoved(position);
             }
             Log.i("Log", "Removed" + removeBonding);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (bluetoothAdapter.isEnabled())
+            bluetoothAdapter.disable();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(bluetoothAdapter.isEnabled())
+            bluetoothAdapter.disable();
     }
 }
