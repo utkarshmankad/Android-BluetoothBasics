@@ -12,6 +12,6 @@ Simple Android project for basic bluetooth related works---
 
   - File Browser (implemented)
 
-  - Transfer data to paired devices (pending)
+  - Transfer data to paired devices (implemented)
 
   - Implementing basic bluetooth based chat (pending)
