@@ -1,25 +1,21 @@
 package in.cdac.bluetooth_basics.file_browser;
 
-import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import in.cdac.bluetooth_basics.R;
 
@@ -33,6 +29,12 @@ public class FileBrowserActivity extends AppCompatActivity implements FileBrowse
     ArrayList<String> paths = new ArrayList<String>();
     ArrayList<String> files = new ArrayList<String>();
     ArrayList<String> filesPath = new ArrayList<String>();
+
+    static final int CUSTOM_DIALOG_ID = 0;
+    private static final int DISCOVER_DURATION = 300;
+    private static final int REQUEST_BLU = 1;
+    BluetoothAdapter btAdatper = BluetoothAdapter.getDefaultAdapter();
+    File dataPath = null;
 
 
     @Override
@@ -56,7 +58,9 @@ public class FileBrowserActivity extends AppCompatActivity implements FileBrowse
             getDirFromRoot(m_isFile.toString());
             fileBrowserAdapter.notifyDataSetChanged();
         } else {
-            Toast.makeText(FileBrowserActivity.this, "This is File", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(FileBrowserActivity.this, "This is File", Toast.LENGTH_SHORT).show();
+            dataPath = m_isFile;
+            sendViaBluetooth(dataPath);
         }
 
     }
@@ -65,10 +69,6 @@ public class FileBrowserActivity extends AppCompatActivity implements FileBrowse
 
 
         Boolean m_isRoot = true;
-        /*items = new ArrayList<String>();
-        paths = new ArrayList<String>();
-        files = new ArrayList<String>();
-        filesPath = new ArrayList<String>();*/
 
         //clear items before populating
         paths.clear();
@@ -103,6 +103,67 @@ public class FileBrowserActivity extends AppCompatActivity implements FileBrowse
             paths.add(m_AddPath);
         }
 
+    }
+
+    //Method for send file via bluetooth------------------------------------------------------------
+    public void sendViaBluetooth(File dataPath) {
+        if(!dataPath.equals(null)){
+            if (btAdatper == null) {
+                Toast.makeText(this, "Device not support bluetooth", Toast.LENGTH_LONG).show();
+            } else {
+                enableBluetooth();
+            }
+        }else{
+            Toast.makeText(this,"Please select a file.",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void enableBluetooth() {
+        Intent discoveryIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoveryIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVER_DURATION);
+        startActivityForResult(discoveryIntent, REQUEST_BLU);
+    }
+
+    //Override method for sending data via bluetooth availability--------------------------
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == DISCOVER_DURATION && requestCode == REQUEST_BLU) {
+
+            Intent i = new Intent();
+            i.setAction(Intent.ACTION_SEND);
+            i.setType("*/*");
+
+            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(dataPath));
+
+            PackageManager pm = getPackageManager();
+
+            List<ResolveInfo> list = pm.queryIntentActivities(i, 0);
+
+            if (list.size() > 0) {
+                String packageName = null;
+                String className = null;
+                boolean found = false;
+
+                for (ResolveInfo info : list) {
+                    packageName = info.activityInfo.packageName;
+                    if (packageName.equals("com.android.bluetooth")) {
+                        className = info.activityInfo.name;
+                        found = true;
+                        break;
+                    }
+                }
+                //CHECK BLUETOOTH available or not------------------------------------------------
+                if (!found) {
+                    Toast.makeText(this, "Bluetooth not been found", Toast.LENGTH_LONG).show();
+                } else {
+                    i.setClassName(packageName, className);
+                    startActivity(i);
+                }
+            }
+        } else {
+            Toast.makeText(this, "Bluetooth is cancelled", Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method to delete selected files

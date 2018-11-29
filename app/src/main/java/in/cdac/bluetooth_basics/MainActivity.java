@@ -1,25 +1,20 @@
 package in.cdac.bluetooth_basics;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ListView;
 import android.widget.Switch;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
@@ -29,10 +24,8 @@ import in.cdac.bluetooth_basics.file_browser.FileBrowserActivity;
 public class MainActivity extends AppCompatActivity implements BluetoothDeviceRecyclerViewAdapter.OnListFragmentInteractionListener, PairedBluetoothDeviceAdapter.OnPairedListFragmentInteractionListener, PairedBluetoothDeviceAdapter.OnPairedListItemLongPressListener {
 
     Switch enable_disable_bluetooth;
-    Button pairing_start_stop, file_browser_test;
+    Button pairing_start_stop, send_data;
 
-    ArrayList<String> arrayListpaired;
-    HandleDeviceSearch handleSeacrh;
     BluetoothDevice bdDevice;
     BluetoothClass bdClass;
     ArrayList<BluetoothDevice> arrayListPairedBluetoothDevices;
@@ -51,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         setContentView(R.layout.activity_main);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        handleSeacrh = new HandleDeviceSearch();
         arrayListPairedBluetoothDevices = new ArrayList<BluetoothDevice>();
         arrayListBluetoothDevices = new ArrayList<BluetoothDevice>();
 
@@ -110,6 +102,15 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
             }
         });
 
+        send_data = (Button) findViewById(R.id.send_data);
+        send_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), FileBrowserActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+
+            }
+        });
+
     }
 
     @Override
@@ -133,10 +134,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         try {
             isBonded = createBond(bdDevice);
             if (isBonded) {
-                //arrayListpaired.add(bdDevice.getName()+"\n"+bdDevice.getAddress());
-                //adapter.notifyDataSetChanged();
                 getPairedDevices();
-                //pairedBluetoothDeviceAdapter.notifyDataSetChanged();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -178,11 +176,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
 
         if (pairedDevice.size() > 0) {
-
             for (BluetoothDevice device : pairedDevice) {
-
-                /*arrayListpaired.add(device.getName() + "\n" + device.getAddress());
-                 */
                 arrayListPairedBluetoothDevices.add(device);
             }
         }
@@ -194,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         Log.e("Bluetooth device", "paired item clicked");
 
         /*Request to send data to the clicked paired device*/
-        startActivity(new Intent(getApplicationContext(), FileBrowserActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        //startActivity(new Intent(getApplicationContext(), FileBrowserActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
 
     }
@@ -233,17 +227,11 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (bluetoothAdapter.isEnabled())
-            bluetoothAdapter.disable();
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(bluetoothAdapter.isEnabled())
+        if (bluetoothAdapter.isEnabled())
             bluetoothAdapter.disable();
     }
 }
