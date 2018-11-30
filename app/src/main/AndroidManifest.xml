@@ -23,8 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".file_browser.FileBrowserActivity" />
-        <activity android:name=".bluetooth_chat.BluetoothChatActivity"></activity>
-        <activity android:name=".bluetooth_chat.DeviceListActivity"></activity>
+        <activity android:name=".bluetooth_chat.BluetoothChatActivity" />
+        <activity android:name=".bluetooth_chat.DeviceListActivity" />
+        <activity android:name=".bluetooth_advertisement.BluetoothAdvertisementActivity"></activity>
     </application>
 
 </manifest>
