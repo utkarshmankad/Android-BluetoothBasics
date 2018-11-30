@@ -22,7 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".file_browser.FileBrowserActivity"></activity>
+        <activity android:name=".file_browser.FileBrowserActivity" />
+        <activity android:name=".bluetooth_chat.BluetoothChatActivity"></activity>
+        <activity android:name=".bluetooth_chat.DeviceListActivity"></activity>
     </application>
 
 </manifest>

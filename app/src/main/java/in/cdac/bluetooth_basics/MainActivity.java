@@ -19,12 +19,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 
+import in.cdac.bluetooth_basics.bluetooth_chat.BluetoothChatActivity;
 import in.cdac.bluetooth_basics.file_browser.FileBrowserActivity;
 
 public class MainActivity extends AppCompatActivity implements BluetoothDeviceRecyclerViewAdapter.OnListFragmentInteractionListener, PairedBluetoothDeviceAdapter.OnPairedListFragmentInteractionListener, PairedBluetoothDeviceAdapter.OnPairedListItemLongPressListener {
 
     Switch enable_disable_bluetooth;
-    Button pairing_start_stop, send_data;
+    Button pairing_start_stop, send_data, bluetooth_chat;
 
     BluetoothDevice bdDevice;
     BluetoothClass bdClass;
@@ -108,6 +109,14 @@ public class MainActivity extends AppCompatActivity implements BluetoothDeviceRe
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), FileBrowserActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
+            }
+        });
+
+        bluetooth_chat = (Button) findViewById(R.id.bluetooth_chat);
+        bluetooth_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), BluetoothChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
 
