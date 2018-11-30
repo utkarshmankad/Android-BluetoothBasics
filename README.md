@@ -18,4 +18,13 @@ Simple Android project for basic bluetooth related works---
  
   - Implementing BLE based message braodcasting (pending)
   
-  - Audio Streaming + simple music player (pending)  
+  - Audio Streaming + simple music player (pending) 
+  
+  
+  Reference Repos -
+  
+    1. Android BluetoothAdvertisements Sample - https://github.com/googlesamples/android-BluetoothAdvertisements/#readme
+    
+    2. Android BluetoothChat Sample - https://github.com/googlesamples/android-BluetoothChat/#readme
+    
+   
