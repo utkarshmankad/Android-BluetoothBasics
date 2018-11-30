@@ -14,4 +14,4 @@ Simple Android project for basic bluetooth related works---
 
   - Transfer data to paired devices (implemented)
 
-  - Implementing basic bluetooth based chat (pending)
+  - Implementing basic bluetooth based chat - Require 2 devcies to check the functionality (implemented)
